@@ -123,18 +123,16 @@ func play(count: Int, nums: [Int]) -> Int {
         print("dealer nums: " + String(describing: deal.dealerNums))
         
         // Hit if player can win
-        if (shouldHit(deal: deal, nums: nums)) {
-            print("Should hit")
-            
-            // Hit and next
+        let restNums: [Int] = ([Int])(nums[4...(nums.count - 1)])
+        if let hitCount = getHitCount(count: 0, deal: deal, nums: restNums) {
             print("\nWin after hit!")
             print("player nums: " + String(describing: deal.playerNums))
             print("dealer nums: " + String(describing: deal.dealerNums))
             
             winCount += 1
             
-            if (nums.count > 8) {
-                let restNums: [Int] = ([Int])(nums[5...(nums.count - 1)])
+            if (nums.count > (7 + hitCount)) {
+                let restNums: [Int] = ([Int])(nums[(4 + hitCount)...(nums.count - 1)])
                 winCount = play(count: winCount, nums: restNums)
             }
         } else if (nums.count > 7) {
