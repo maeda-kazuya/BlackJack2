@@ -40,49 +40,84 @@ func main() {
 
     var winCounts: [Int] = []
     
+    //////////////////////
     // No hit in first deal
+    //////////////////////
     let firstNums_NoHit = ([Int])(nums[0...3])
     let restNums_NoHit = ([Int])(nums[4...(nums.count - 1)])
+    
+    let deal_NoHit = Deal()
+    deal_NoHit.playerNums = [firstNums_NoHit[0], firstNums_NoHit[2]]
+    deal_NoHit.dealerNums = [firstNums_NoHit[1], firstNums_NoHit[3]]
     
     // No hit -> No hit
     let firstNums_NoHit_NoHit = ([Int])(restNums_NoHit[0...3])
     let restNums_NoHit_NoHit = ([Int])(restNums_NoHit[4...(restNums_NoHit.count - 1)])
 
+    let deal_NoHit_NoHit = Deal()
+    deal_NoHit_NoHit.playerNums = [firstNums_NoHit_NoHit[0], firstNums_NoHit_NoHit[2]]
+    deal_NoHit_NoHit.dealerNums = [firstNums_NoHit_NoHit[1], firstNums_NoHit_NoHit[3]]
+
+    var winCount_NoHit_NoHit = ((deal_NoHit.didPlayerWin()) ? 1 : 0) + ((deal_NoHit_NoHit.didPlayerWin()) ? 1 : 0) + play(count: 0, nums: restNums_NoHit_NoHit)
+    
+    print("winCount_NoHit_NoHit: " + String(winCount_NoHit_NoHit))
+    
     // No Hit -> Hit
     let firstNums_NoHit_Hit = ([Int])(restNums_NoHit[0...4])
     let restNums_NoHit_Hit = ([Int])(restNums_NoHit[5...(restNums_NoHit.count - 1)])
-    
-    var winCount_NoHit_NoHit = play(count: 0, nums: firstNums_NoHit) + play(count: 0, nums: firstNums_NoHit_NoHit) + play(count: 0, nums: restNums_NoHit_NoHit)
-    print("winCount_NoHit_NoHit: " + String(winCount_NoHit_NoHit))
 
-    var winCount_NoHit_Hit = play(count: 0, nums: firstNums_NoHit) + play(count: 0, nums: firstNums_NoHit_Hit) + play(count: 0, nums: restNums_NoHit_Hit)
+    let deal_NoHit_Hit = Deal()
+    deal_NoHit_Hit.playerNums = [firstNums_NoHit_Hit[0], firstNums_NoHit_Hit[2], firstNums_NoHit_Hit[4]]
+    deal_NoHit_Hit.dealerNums = [firstNums_NoHit_Hit[1], firstNums_NoHit_Hit[3]]
+    
+    var winCount_NoHit_Hit = ((deal_NoHit.didPlayerWin()) ? 1 : 0) + ((deal_NoHit_Hit.didPlayerWin()) ? 1 : 0) + play(count: 0, nums: restNums_NoHit_Hit)
     print("winCount_NoHit_Hit: " + String(winCount_NoHit_NoHit))
     
+    //////////////////////
     // Hit in first deal
+    //////////////////////
     let firstNums_Hit = ([Int])(nums[0...4])
     let restNums_Hit = ([Int])(nums[5...(nums.count - 1)])
+    
+    let deal_Hit = Deal()
+    deal_Hit.playerNums = [firstNums_Hit[0], firstNums_Hit[2], firstNums_Hit[4]]
+    deal_Hit.dealerNums = [firstNums_Hit[1], firstNums_Hit[3]]
     
     // Hit -> No hit
     let firstNums_Hit_NoHit = ([Int])(restNums_Hit[0...3])
     let restNums_Hit_NoHit = ([Int])(restNums_Hit[4...(restNums_Hit.count - 1)])
+    
+    let deal_Hit_NoHit = Deal()
+    deal_Hit_NoHit.playerNums = [firstNums_Hit_NoHit[0], firstNums_Hit_NoHit[2]]
+    deal_Hit_NoHit.dealerNums = [firstNums_Hit_NoHit[1], firstNums_Hit_NoHit[3]]
 
+    var winCount_Hit_NoHit = ((deal_Hit.didPlayerWin()) ? 1 : 0) + ((deal_Hit_NoHit.didPlayerWin()) ? 1 : 0) + play(count: 0, nums: restNums_Hit_NoHit)
+    print("winCount_Hit_NoHit: " + String(winCount_Hit_NoHit))
+    
     // Hit -> Hit
     let firstNums_Hit_Hit = ([Int])(restNums_Hit[0...4])
     let restNums_Hit_Hit = ([Int])(restNums_Hit[5...(restNums_Hit.count - 1)])
-    
-    var winCount_Hit_NoHit = play(count: 0, nums: firstNums_Hit) + play(count: 0, nums: firstNums_Hit_NoHit) + play(count: 0, nums: restNums_Hit_NoHit)
-    print("winCount_Hit_NoHit: " + String(winCount_Hit_NoHit))
-    
-    var winCount_Hit_Hit = play(count: 0, nums: firstNums_Hit) + play(count: 0, nums: firstNums_Hit_Hit) + play(count: 0, nums: restNums_Hit_Hit)
+
+    let deal_Hit_Hit = Deal()
+    deal_Hit_Hit.playerNums = [firstNums_Hit_Hit[0], firstNums_Hit_Hit[2], firstNums_Hit_Hit[4]]
+    deal_Hit_Hit.dealerNums = [firstNums_Hit_Hit[1], firstNums_Hit_Hit[3]]
+
+//    var winCount_Hit_Hit = play(count: 0, nums: firstNums_Hit) + play(count: 0, nums: firstNums_Hit_Hit) + play(count: 0, nums: restNums_Hit_Hit)
+    var winCount_Hit_Hit = ((deal_Hit.didPlayerWin()) ? 1 : 0) + ((deal_Hit_Hit.didPlayerWin()) ? 1 : 0) + play(count: 0, nums: restNums_Hit_Hit)
     print("winCount_Hit_Hit: " + String(winCount_Hit_Hit))
 
+    //TEST
+//    var winCount_Hit_Hit_FIRST = ((deal_Hit_Hit.didPlayerWin()) ? 1 : 0)
+//    print("winCount_Hit_Hit_FIRST: " + String(winCount_Hit_Hit_FIRST))
+//    print("Hit_Hit_FIRST.player: " + String(describing: deal_Hit_Hit.playerNums))
+//    print("Hit_Hit_FIRST.dealer: " + String(describing: deal_Hit_Hit.dealerNums))
     
     //    for i in 0..<depth {
 //        var winCount = play(count: 0, nums: cap(nums: nums))
 //    }
 
-    var winCount = play(count: 0, nums: cap(nums: nums))
-    print("winCount: " + String(winCount))
+//    var winCount = play(count: 0, nums: cap(nums: nums))
+//    print("winCount: " + String(winCount))
 
 //    print(play(count: 0, nums: cap(nums: nums)))
     
