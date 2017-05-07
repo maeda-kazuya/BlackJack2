@@ -121,8 +121,27 @@ func createDealNode(depth: Int, node: DealNode) -> DealNode? {
     }
 }
 
-func getWinCount(node: DealNode) {
+//func getWinCountList(node: DealNode) -> [Any] {
+func getWinCountList(node: DealNode) -> Any {
+    var winCounts: [Any] = []
+//    var winCount = 0
+//    
+//    if (node.deal.didPlayerWin()) {
+//        winCount += 1
+//    }
     
+    if (node.childs.count > 0) {
+        for childNode in node.childs {
+            winCounts.append(getWinCountList(node: childNode))
+//            winCounts.append(winCount + getWinCountList(node: childNode))
+        }
+    } else {
+        let winCount = play(count: 0, nums: node.restNums)
+//        winCount += play(count: 0, nums: node.restNums)
+        return winCount
+    }
+    
+    return winCounts
 }
 
 func main() {
@@ -130,6 +149,9 @@ func main() {
 
     var rootNode = DealNode(deal: Deal(), restNums: nums)
     createDealNode(depth: depth, node: rootNode)
+    
+    var winCountList = getWinCountList(node: rootNode)
+    print("### winCountByMethod: " + String(describing: winCountList))
 
     var winCounts: [Int] = []
     
