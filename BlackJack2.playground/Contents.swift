@@ -8,7 +8,7 @@ let cardNums = [10, 12, 4, 12, 9, 7, 7, 9, 7, 10, 5, 12, 4, 6, 8, 5, 13, 6, 1, 2
 func main() {
     let nums = cap(nums: cardNums)
     
-    let rootNode = getNode(rootDeal: Deal(), nums: nums, depth: 4)
+    let rootNode = getTree(rootDeal: Deal(), nums: nums, depth: 4)
     let maxWinCount = getMaxWinCount(node: rootNode, count: 0)
     print("\n### max winCount: " + String(maxWinCount))
     
@@ -61,81 +61,62 @@ func getMaxWinCount(node: Node, count: Int) -> Int {
     return maxWinCount
 }
 
+func getNextDeal(deal: Deal, nums: [Int], index: Int) -> Deal? {
+//func getNextDeal(deal: Deal, nextNum: Int) -> Deal? {
+    let nextDeal = Deal(playerNums: deal.playerNums, dealerNums: deal.dealerNums)
+//    nextDeal.playerNums.append(nextNum)
+    nextDeal.playerNums.append(contentsOf: nums[0...index])
+    
+    return nextDeal
+}
 
-
-//func getNextDeal(deal: Deal, nums: [Int]) -> Deal {
-//    if (deal.isPlayerBust()) {
-//        return nil
-//    }
-//    
-//    let nextDeal = Deal()
-//    nextDeal.playerNums = deal.playerNums
-//    nextDeal.playerNums.append(nums[0])
-//    nextDeal.dealerNums = deal.dealerNums
-//
-//    return nextDeal
-//}
-
-func getNode(rootDeal: Deal, nums: [Int], depth: Int) -> Node {
+func getTree(rootDeal: Deal, nums: [Int], depth: Int) -> Node {
     let rootNode = Node(deal: rootDeal, restNums: nums)
     
     if (depth > 0 && nums.count > dealUnit - 1) {
-        let deal = Deal()
-        deal.playerNums = [nums[0], nums[2]]
-        deal.dealerNums = [nums[1], nums[3]]
+        let deal = Deal(playerNums: [nums[0], nums[2]], dealerNums: [nums[1], nums[3]])
         
         // Add child node
-        let restNums: [Int] = ([Int])(nums[(4)...(nums.count - 1)])
-        let childNode = getNode(rootDeal: deal, nums: restNums, depth: depth - 1)
+        let restNums: [Int] = ([Int])(nums[(dealUnit)...(nums.count - 1)])
+        let childNode = getTree(rootDeal: deal, nums: restNums, depth: depth - 1)
         rootNode.childs.append(childNode)
         
         //        print("\nplayer nums: " + String(describing: deal.playerNums))
         //        print("dealer nums: " + String(describing: deal.dealerNums))
         //        print("rest nums: " + String(describing: restNums))
-
-//        for (index, num) in restNums.enumerated() {
-
-        let tempDeal = Deal()
-        tempDeal.playerNums = deal.playerNums
-        tempDeal.dealerNums = deal.dealerNums
         
-        var count = 0
-        while (!(tempDeal.isPlayerBust())) {
-            let subDeal = Deal()
-            subDeal.playerNums = tempDeal.playerNums
-            subDeal.dealerNums = tempDeal.dealerNums
-
-            tempDeal.playerNums.append(restNums[count])
-            subDeal.playerNums.append(restNums[count])
-            
-            // Add child node
-            let subNums: [Int] = ([Int])(restNums[(count + 1)...(restNums.count - 1)])
-            let childNode = getNode(rootDeal: subDeal, nums: subNums, depth: depth - 1)
+        var index = 0
+//        while let nextDeal = getNextDeal(deal: deal, nextNum: restNums[index]) {
+//        while let nextDeal = getNextDeal(deal: deal, nums: [Int], index: Int) {
+        while let nextDeal = getNextDeal(deal: deal, nums: restNums, index: index) {
+            let subNums: [Int] = ([Int])(restNums[(index + 1)...(restNums.count - 1)])
+            let childNode = getTree(rootDeal: nextDeal, nums: subNums, depth: depth - 1)
             rootNode.childs.append(childNode)
-
-            count += 1
+            
+            if (!(nextDeal.isPlayerBust())) {
+                index += 1
+            } else {
+                break
+            }
         }
         
-        
-//        }
-        
-//        let subDeal = Deal()
-//        subDeal.playerNums = deal.playerNums
-//        subDeal.dealerNums = deal.dealerNums
-//        
-//        for (index, num) in restNums.enumerated() {
-//            if (!(subDeal.isPlayerBust())) {
-//                subDeal.playerNums.append(num)
-//                
-//                // Add child node
-//                let subNums: [Int] = ([Int])(restNums[(index + 1)...(restNums.count - 1)])
-//                let childNode = getNode(rootDeal: subDeal, nums: subNums, depth: depth - 1)
-//                rootNode.childs.append(childNode)
-//                
-//                //                print("\nplayer nums: " + String(describing: subDeal.playerNums))
-//                //                print("dealer nums: " + String(describing: subDeal.dealerNums))
-//                //                print("rest nums: " + String(describing: subNums))
-//            }
+
+//        let tempDeal = Deal(playerNums: deal.playerNums, dealerNums: deal.dealerNums)
+//        var count = 0
+//        while (!(tempDeal.isPlayerBust())) {
+//            tempDeal.playerNums.append(restNums[count])
+//            
+//            let subDeal = Deal()
+//            subDeal.dealerNums = tempDeal.dealerNums
+//            subDeal.playerNums = tempDeal.playerNums
+//            subDeal.playerNums.append(restNums[count])
+//            
+//            // Add child node
+//            let subNums: [Int] = ([Int])(restNums[(count + 1)...(restNums.count - 1)])
+//            let childNode = getTree(rootDeal: subDeal, nums: subNums, depth: depth - 1)
+//            rootNode.childs.append(childNode)
+//
+//            count += 1
 //        }
     }
     
@@ -213,11 +194,15 @@ func cap(nums: [Int]) -> [Int] {
 class Deal {
     var playerNums: [Int] = []
     var dealerNums: [Int] = []
+//    var playerNums: [Int]
+//    var dealerNums: [Int]
 
-//    public init(playerNums: [Int], dealerNums: [Int]) {
-//        self.playerNums = playerNums
-//        self.dealerNums = dealerNums
-//    }
+    init() { }
+    
+    init(playerNums: [Int], dealerNums: [Int]) {
+        self.playerNums = playerNums
+        self.dealerNums = dealerNums
+    }
     
     func getPlayerCounts() -> [Int] {
         var playerCounts: [Int] = []
@@ -273,7 +258,6 @@ class Deal {
     }
 }
 
-//class DealNode {
 class Node {
     var deal: Deal
     var restNums: [Int] = []
